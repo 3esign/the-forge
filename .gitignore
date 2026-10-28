@@ -1,0 +1,13 @@
+out/
+cache/
+broadcast/
+.env
+docs/_sheet.html
+docs/_sheet.png
+docs/_zoom.html
+docs/_zoom.png
+LOG.md
+KNOWLEDGE.md
+RECNIK.jsonl
+UPUTSTVO.md
+svemir_kit.json

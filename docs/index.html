@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THE FORGE — bars of metal that remember every blow</title>
+<meta name="description" content="333 bars of metal, fully on-chain on Base. Strike to shape, temper to lock, fuse to alloy, neglect to cool. No artist, only the hammer.">
+<meta property="og:title" content="THE FORGE">
+<meta property="og:description" content="Fully on-chain NFT collection on Base. Strike, temper, fuse, cool. Rendered live from contract state.">
+<meta property="og:image" content="https://3esign.github.io/the-forge/gallery/collection.svg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="gallery/collection.svg">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+<style>
+  :root{--bg:#07080c;--panel:#0d0f16;--line:#1c2030;--ink:#d3d8e3;--dim:#7e8798;--hot:#ff8a3c;--gold:#e3c27a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Georgia,"Times New Roman",serif}
+  a{color:var(--gold)}
+  header{padding:72px 24px 40px;text-align:center;background:radial-gradient(ellipse at 50% 120%,#2a1608 0%,var(--bg) 60%)}
+  h1{margin:0;font:400 54px/1 Georgia,serif;letter-spacing:.22em;color:#fff}
+  h1 b{color:var(--hot);font-weight:400}
+  .tag{color:var(--dim);font-style:italic;margin:14px 0 0}
+  .hero{max-width:720px;margin:28px auto 0}
+  .hero img{width:100%;max-width:512px;display:block;margin:0 auto;border:1px solid var(--line);border-radius:14px;background:#000}
+  main{max-width:1120px;margin:0 auto;padding:0 24px 80px}
+  h2{font:400 22px Georgia,serif;letter-spacing:.14em;color:#fff;margin:56px 0 14px;text-transform:uppercase}
+  p{max-width:720px}
+  blockquote{max-width:720px;margin:0;padding:18px 22px;border-left:2px solid var(--hot);color:#e9e1d2;font-style:italic;background:var(--panel);border-radius:0 10px 10px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .card img{width:100%;display:block;aspect-ratio:1;background:#000}
+  .card .meta{padding:10px 12px;font-size:13px;color:var(--dim)}
+  .meta b{color:var(--ink);font-weight:400}
+  table{border-collapse:collapse;width:100%;max-width:720px;font-size:14px}
+  td,th{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{color:var(--dim);font-weight:400}
+  code,pre{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+  pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;max-width:720px}
+  code{color:var(--gold)}
+  .bar{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:0 0 20px}
+  .stat{color:var(--dim);font-size:13px}.stat b{color:#fff;font-size:18px;font-weight:400}
+  button{background:var(--hot);color:#1a0d04;border:0;border-radius:8px;padding:10px 20px;font:600 14px Georgia,serif;cursor:pointer}
+  button:disabled{opacity:.4;cursor:default}
+  button.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+  .note{color:var(--dim);font-size:13px;max-width:720px}
+  .links a{margin-right:18px}
+  footer{padding:40px 24px 60px;text-align:center;color:var(--dim);font-size:13px;border-top:1px solid var(--line)}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--dim);margin:0 6px 6px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>THE <b>FORGE</b></h1>
+  <p class="tag">bars of metal that remember every blow · fully on-chain · Base</p>
+  <div class="hero"><img src="gallery/collection.svg" alt="THE FORGE collection image: a tempered gold bar"></div>
+</header>
+<main>
+  <blockquote>The Forge never sleeps. Each bar comes out of the furnace soft, glowing, with a crystal lattice only it carries. What it becomes depends on the hand that holds it. Strike it and it remembers. Leave it and it cools. Bring two to the anvil and they become something neither was alone. There is no artist here. There is only the hammer, the heat, and whoever shows up to work.</blockquote>
+
+  <h2>Live from the chain</h2>
+  <div class="bar">
+    <div class="stat">cast <b id="cast">—</b> / 333</div>
+    <div class="stat">living <b id="living">—</b></div>
+    <div class="stat">mint price <b id="price">—</b> ETH</div>
+    <div class="stat">strike fee <b id="strikeFee">—</b> ETH</div>
+    <div><button id="connect" class="ghost">connect wallet</button> <button id="mint" disabled>mint a bar</button></div>
+  </div>
+  <p class="note" id="note">Not deployed yet. This page shows the renderer output below; once the contract is live on Base its address goes into <code>data/contract.json</code> and this section reads bars straight from the chain. The art is a data URI returned by <code>tokenURI()</code>: no server, no IPFS.</p>
+  <div class="grid" id="live"></div>
+
+  <h2>How a bar lives</h2>
+  <table>
+    <tr><th>Action</th><th>What happens</th><th>Fee</th></tr>
+    <tr><td><code>mint()</code></td><td>Casts a raw bar. Family drawn from the lattice: iron 50%, copper 25%, silver 15%, gold 8%, meteor 2%. Fresh from the furnace it glows for three days.</td><td>tranche price: 0.003 → 0.005 → 0.008 → 0.012 ETH, 5 per wallet</td></tr>
+    <tr><td><code>strike(id)</code></td><td>One hammer blow. Nudges the outline forever, leaves a dent, raises hardness, reheats. One strike per bar per 10 minutes.</td><td>0.0003 ETH</td></tr>
+    <tr><td>21st strike</td><td>The bar <b>tempers</b>: oxide colours, a bright rim, the hallmark. Shape locked, immune to cooling.</td><td>—</td></tr>
+    <tr><td><code>fuse(a, b)</code></td><td>Burns two shaped or tempered bars you own, mints one <b>alloy</b>. Same family stays, mixed families become damascus. Hardness carries over plus a bonus. Alloys are immune to cooling and can be fused again: generation deepens, waves get denser. Supply only shrinks.</td><td>0.002 ETH</td></tr>
+    <tr><td><code>temper()</code></td><td>Anyone may call it, once a day is enough. Every shaped bar untouched for 3 days <b>cools</b>: loses hardness and one strike, and can fall back to raw. Ash settles on it. Bounded to 50 bars per call.</td><td>gas only</td></tr>
+    <tr><td><code>quench(id)</code></td><td>Reheat without striking. Protects a bar you cannot work this week.</td><td>0.0009 ETH</td></tr>
+    <tr><td>transfer</td><td>Every change of hands leaves a hairline scar on the edge.</td><td>—</td></tr>
+  </table>
+  <p class="note">Fees split 70 / 30 between two treasuries via <code>harvest()</code>, callable by anyone. 5% ERC-2981 royalty. Owner can only mint the 8-bar artist reserve; ownership is renounced after setup. No admin, no pause, no upgrade.</p>
+
+  <h2>The art, from the real renderer</h2>
+  <p>Every image below was produced by the Solidity renderer that will live on chain (<code>ForgeArt.sol</code>), not by a mockup. The outline replays the strikes, hardness reveals the crystal lattice, heat fades, cold bars dull, fused bars carry damascus waves, transfers scar the edge.</p>
+  <div class="grid" id="gallery"></div>
+
+  <h2>Work it from X</h2>
+  <p>The contract is plain ERC-721 with public functions, so any agent wallet can work a bar. With <a href="https://x.com/bankrbot">@bankrbot</a> (MFA on):</p>
+<pre>@bankrbot mint from contract 0x… on Base
+@bankrbot call strike(ID) on 0x… with 0.0003 ETH
+@bankrbot call fuse(A, B) on 0x… with 0.002 ETH
+@bankrbot create a daily automation: call temper() on 0x…</pre>
+  <p class="note">Bankr reads <code>currentPrice()</code> and sends the exact value. Gas is paid by the caller's wallet.</p>
+
+  <h2>Marketplaces</h2>
+  <p>Standard ERC-721 + ERC-2981 + ERC-4906 + ERC-7572 <code>contractURI()</code>. Metadata and image are data URIs, so every marketplace that indexes Base shows the live art without any hosting. Links appear here once the contract is deployed.</p>
+  <p class="links" id="markets"><span class="pill">OpenSea</span><span class="pill">Magic Eden</span><span class="pill">Rarible</span><span class="pill">Zora</span><span class="pill">BaseScan</span></p>
+
+  <h2>Source</h2>
+  <p><a href="https://github.com/3esign/the-forge">github.com/3esign/the-forge</a> — contracts, 47 tests including fuzzing of the renderer, this page. Built by <a href="https://github.com/3esign">Semir Poturak / Svemir</a>.</p>
+</main>
+<footer>THE FORGE · no artist, only the hammer</footer>
+
+<script>
+(async () => {
+  // curated gallery from the renderer
+  const g = await fetch('data/gallery.json').then(r => r.json()).catch(() => []);
+  const gal = document.getElementById('gallery');
+  for (const x of g) {
+    const c = document.createElement('div'); c.className = 'card';
+    c.innerHTML = `<img loading="lazy" src="${x.file}" alt="${x.caption}"><div class="meta"><b>${x.caption}</b><br>${x.family} · ${x.form} · ${x.strikes} strikes · H${x.hardness} · ${x.bytes} B</div>`;
+    gal.appendChild(c);
+  }
+
+  // live mode once deployed
+  const cfg = await fetch('data/contract.json').then(r => r.json()).catch(() => null);
+  const q = new URLSearchParams(location.search);
+  const address = q.get('contract') || (cfg && cfg.address);
+  if (!address) return;
+  const chainId = Number(q.get('chainId') || (cfg && cfg.chainId) || 8453);
+  const rpc = chainId === 84532 ? 'https://sepolia.base.org' : 'https://mainnet.base.org';
+  const abi = [
+    'function cast() view returns (uint256)', 'function totalSupply() view returns (uint256)', 'function nextId() view returns (uint256)',
+    'function currentPrice() view returns (uint256)', 'function strikeFee() view returns (uint256)',
+    'function tokenURI(uint256) view returns (string)', 'function ownerOf(uint256) view returns (address)',
+    'function mint() payable returns (uint256)'
+  ];
+  const provider = new ethers.JsonRpcProvider(rpc);
+  const forge = new ethers.Contract(address, abi, provider);
+  const note = document.getElementById('note');
+  const base = chainId === 84532 ? 'https://sepolia.basescan.org/address/' : 'https://basescan.org/address/';
+  note.innerHTML = `Contract <a href="${base}${address}">${address}</a> on ${chainId === 84532 ? 'Base Sepolia' : 'Base'}. Bars below are read live from <code>tokenURI()</code>.`;
+  if (chainId === 8453) {
+    document.getElementById('markets').innerHTML =
+      `<a href="https://opensea.io/assets/base/${address}">OpenSea</a><a href="https://magiceden.io/collections/base/${address}">Magic Eden</a>` +
+      `<a href="https://rarible.com/collection/base/${address}">Rarible</a><a href="https://zora.co/collect/base:${address}">Zora</a><a href="${base}${address}">BaseScan</a>`;
+  }
+  const [cast, living, price, fee, next] = await Promise.all([forge.cast(), forge.totalSupply(), forge.currentPrice(), forge.strikeFee(), forge.nextId()]);
+  document.getElementById('cast').textContent = cast;
+  document.getElementById('living').textContent = living;
+  document.getElementById('price').textContent = ethers.formatEther(price);
+  document.getElementById('strikeFee').textContent = ethers.formatEther(fee);
+  const live = document.getElementById('live');
+  const n = Number(next);
+  for (let id = n - 1; id >= 0 && id > n - 61; id--) {
+    try {
+      const uri = await forge.tokenURI(id);
+      const meta = JSON.parse(atob(uri.split(',')[1]));
+      const a = Object.fromEntries(meta.attributes.map(t => [t.trait_type, t.value]));
+      const c = document.createElement('div'); c.className = 'card';
+      c.innerHTML = `<img src="${meta.image}" alt="${meta.name}"><div class="meta"><b>${meta.name}</b><br>${a.Family} · ${a.Form} · ${a.Strikes} strikes · H${a.Hardness}${a.Generation > 0 ? ' · gen ' + a.Generation : ''}</div>`;
+      live.appendChild(c);
+    } catch (e) { /* burned */ }
+  }
+  // wallet
+  const connect = document.getElementById('connect'); const mint = document.getElementById('mint');
+  if (!window.ethereum) return;
+  connect.onclick = async () => {
+    const bp = new ethers.BrowserProvider(window.ethereum);
+    await bp.send('eth_requestAccounts', []);
+    const signer = await bp.getSigner();
+    connect.textContent = (await signer.getAddress()).slice(0, 6) + '…';
+    mint.disabled = false;
+    mint.onclick = async () => {
+      const w = new ethers.Contract(address, abi, signer);
+      const p = await forge.currentPrice();
+      const tx = await w.mint({ value: p });
+      mint.textContent = 'casting…'; await tx.wait(); location.reload();
+    };
+  };
+})();
+</script>
+</body>
+</html>
