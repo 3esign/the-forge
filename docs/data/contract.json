@@ -1,9 +1,10 @@
 {
-  "network": "Base Sepolia (testnet probe, not the launch)",
-  "chainId": 84532,
-  "address": "0x94b754E2efE10c3dcbDE790F2c33dF345dc8F875",
-  "renderer": "0x9BD98E1F0B1ac8B1C08F3291aDDa88F404989068",
+  "network": "Base mainnet",
+  "chainId": 8453,
+  "address": "0x95fa809e1099f60EDcc01EcC107d73e68eEbFC88",
+  "renderer": "0x7e3B56363a42fA174c0048b44Cb313b5ae0ce215",
   "deployedAt": "2026-10-28",
-  "explorer": "https://sepolia.basescan.org/address/0x94b754E2efE10c3dcbDE790F2c33dF345dc8F875",
-  "sourcify": "https://repo.sourcify.dev/84532/0x94b754E2efE10c3dcbDE790F2c33dF345dc8F875"
+  "explorer": "https://basescan.org/address/0x95fa809e1099f60EDcc01EcC107d73e68eEbFC88",
+  "sourcify": "https://repo.sourcify.dev/8453/0x95fa809e1099f60EDcc01EcC107d73e68eEbFC88",
+  "opensea": "https://opensea.io/assets/base/0x95fa809e1099f60EDcc01EcC107d73e68eEbFC88/1"
 }
