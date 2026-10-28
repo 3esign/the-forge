@@ -1,0 +1,9 @@
+{
+  "network": "Base Sepolia (testnet probe, not the launch)",
+  "chainId": 84532,
+  "address": "0x94b754E2efE10c3dcbDE790F2c33dF345dc8F875",
+  "renderer": "0x9BD98E1F0B1ac8B1C08F3291aDDa88F404989068",
+  "deployedAt": "2026-10-28",
+  "explorer": "https://sepolia.basescan.org/address/0x94b754E2efE10c3dcbDE790F2c33dF345dc8F875",
+  "sourcify": "https://repo.sourcify.dev/84532/0x94b754E2efE10c3dcbDE790F2c33dF345dc8F875"
+}
